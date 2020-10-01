@@ -1,5 +1,6 @@
 # Adding files to ignore
 Practice.ipynb
+scraping_rough.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
