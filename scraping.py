@@ -20,6 +20,7 @@ def scrape_all():
         "last_modified": dt.datetime.now()
     }
 
+
     # Stop webdriver and return data
     browser.quit()
     return data
@@ -44,18 +45,18 @@ def mars_news(browser):
     
     # Add try/except for error handling
     try:
-        slide_elem = news_soup.select_one('ul.item_list li.slide')
+        slide_elem = news_soup.select_one("ul.item_list li.slide")
             # - Parent element: this element hold all of the other elem,ents within it, and will be referenced when 
             #   filtering results further.
             # - 'ul.item_list li.slide' pinpoints the <li /> tag with the class of slide and the <ul /> tag with a 
             #   class of item_list
 
         # Use the parent element to find the first `a` tag and save it as `news_title`
-        news_title = slide_elem.find("div", class_='content_title').get_text()
+        news_title = slide_elem.find("div", class_="content_title").get_text()
             # .get_text() when chained onto .find(), only returns the text of an element
 
         # Use the parent element to find the paragraph text
-        news_p = slide_elem.find('div', class_="article_teaser_body").get_text()
+        news_p = slide_elem.find("div", class_="article_teaser_body").get_text()
 
     except AttributeError:
         return None, None
@@ -69,7 +70,7 @@ def featured_image(browser):
     browser.visit(url)
 
     # Find and click the full image button
-    full_image_elem = browser.find_by_id('full_image')
+    full_image_elem = browser.find_by_id('full_image')[0]
     full_image_elem.click()
 
     # Find the more info button and click that
@@ -87,7 +88,7 @@ def featured_image(browser):
 
     # Add try/except for error handling
     try:
-        # Find the relative image url
+        # find the relative image url
         img_url_rel = img_soup.select_one('figure.lede a img').get("src")
             # - 'figure.lede' references the <figure /> tag and its class, lede
             # - 'a' is the next tag nested inside the <figure /> tag
@@ -97,29 +98,29 @@ def featured_image(browser):
     except AttributeError:
         return None
 
-    # Use the base URL to create an absolute URL
+    # Use the base url to create an absolute url
     img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
 
     return img_url
 
 def mars_facts():
-    
+    # Add try/except for error handling
     try:
-        # use 'read_html" to scrape the facts table into a dataframe
+        # use 'read_html' to scrape the facts table into a dataframe
         df = pd.read_html('http://space-facts.com/mars/')[0]
             # 'read.html()' searches for and returns a list of tables found in th HTML
             # '[0]' specifies index of 0, tells Pandas to pull only first table it encounters
     except BaseException:
         return None
     
-    df.columns=['description', 'value']
-        # Assign column to new DF
-    df.set_index('description', inplace=True)
+    # Assign columns and set index of dataframe
+    df.columns=['Description', 'Mars']
+    df.set_index('Description', inplace=True)
         # Sets Description column to table's index.
             #'inplace=True' means updated index will remain in place w/o having to reassign DF to a new variable
 
-    # Convert DF back to an HTML
-    return df.to_html()
+   # Convert dataframe into HTML format, add bootstrap
+    return df.to_html(classes="table table-striped")
 
 if __name__ == "__main__":
 
