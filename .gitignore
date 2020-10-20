@@ -1,6 +1,7 @@
 # Adding files to ignore
 Practice.ipynb
 scraping_rough.py
+hemispheres.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
